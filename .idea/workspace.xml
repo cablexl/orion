@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="436ebcfa-fb9c-49e9-a284-800b482f8174" name="Default" comment="" />
+    <list default="true" id="436ebcfa-fb9c-49e9-a284-800b482f8174" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/cablexl/Orion/Triangle.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/gen/com/example/Orion/BuildConfig.java" afterPath="$PROJECT_DIR$/gen/com/cablexl/Orion/BuildConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/gen/com/example/Orion/Manifest.java" afterPath="$PROJECT_DIR$/gen/com/cablexl/Orion/Manifest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/gen/com/example/Orion/R.java" afterPath="$PROJECT_DIR$/gen/com/cablexl/Orion/R.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/com/example/Orion/OrionGL20Renderer.java" afterPath="$PROJECT_DIR$/src/com/cablexl/Orion/OrionGL20Renderer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/com/example/Orion/OrionGLSurfaceView.java" afterPath="$PROJECT_DIR$/src/com/cablexl/Orion/OrionGLSurfaceView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/com/example/Orion/OrionMainActivity.java" afterPath="$PROJECT_DIR$/src/com/cablexl/Orion/OrionMainActivity.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/com/example/Orion/Square.java" afterPath="$PROJECT_DIR$/src/com/cablexl/Orion/Square.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="Orion.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/res/values/strings.xml" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368666551980" ignored="false" />
     <file path="$PROJECT_DIR$/res/layout/main.xml" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368666552388" ignored="false" />
-    <file path="/OrionMainActivity.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368667461396" ignored="false" />
+    <file path="/OrionMainActivity.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368671612781" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368666707336" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/com/example/Orion/Manifest.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368666717084" ignored="false" />
-    <file path="/OrionGLSurfaceView.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368666973672" ignored="false" />
-    <file path="/OrionGL20Renderer.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368668159761" ignored="false" />
-    <file path="/Dummy.txt" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368669522002" ignored="false" />
+    <file path="/OrionGLSurfaceView.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368671618975" ignored="false" />
+    <file path="/OrionGL20Renderer.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368677689009" ignored="false" />
+    <file path="/Dummy.txt" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368748077792" ignored="false" />
+    <file path="/a.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368671179921" ignored="false" />
+    <file path="/Square.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368677774178" ignored="false" />
+    <file path="/a.dummy" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368671700708" ignored="false" />
+    <file path="/fragment.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368671767242" ignored="false" />
+    <file path="/Triangle.java" changelist="436ebcfa-fb9c-49e9-a284-800b482f8174" time="1368672958132" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,29 +88,40 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="OrionGLSurfaceView.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionGLSurfaceView.java">
+      <file leaf-file-name="OrionGLSurfaceView.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/OrionGLSurfaceView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="0" selection-start="324" selection-end="324" vertical-scroll-proportion="0.16773163">
+            <state line="17" column="5" selection-start="435" selection-end="435" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Square.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/example/Orion/Square.java">
+      <file leaf-file-name="OrionGL20Renderer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/OrionGL20Renderer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="23" selection-start="214" selection-end="214" vertical-scroll-proportion="0.0">
+            <state line="34" column="22" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OrionMainActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionMainActivity.java">
+      <file leaf-file-name="Triangle.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/Triangle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="36" selection-start="482" selection-end="482" vertical-scroll-proportion="0.0">
+            <state line="62" column="0" selection-start="2234" selection-end="2553" vertical-scroll-proportion="0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Square.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/Square.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="98" column="54" selection-start="3642" selection-end="3642" vertical-scroll-proportion="0.78737116">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -122,14 +149,39 @@
         <option value="$PROJECT_DIR$/src/com/example/Orion/OrionGLSurfaceView.java" />
         <option value="$PROJECT_DIR$/src/com/example/Orion/Square.java" />
         <option value="$PROJECT_DIR$/src/com/example/Orion/OrionGL20Renderer.java" />
+        <option value="$PROJECT_DIR$/src/com/cablexl/Orion/OrionMainActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/cablexl/Orion/OrionGLSurfaceView.java" />
+        <option value="$PROJECT_DIR$/src/com/cablexl/Orion/Triangle.java" />
+        <option value="$PROJECT_DIR$/src/com/cablexl/Orion/OrionGL20Renderer.java" />
+        <option value="$PROJECT_DIR$/src/com/cablexl/Orion/Square.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="83" />
-    <option name="y" value="22" />
-    <option name="width" value="2477" />
-    <option name="height" value="1400" />
+    <option name="width" value="1440" />
+    <option name="height" value="900" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Android</id>
+          </State>
+          <State>
+            <id>Android Lint</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Abstraction issues</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -148,11 +200,11 @@
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
-      <flattenPackages />
+      <flattenPackages ProjectPane="false" />
       <showMembers />
       <showModules />
       <showLibraryContents />
-      <hideEmptyPackages />
+      <hideEmptyPackages ProjectPane="false" />
       <abbreviatePackageNames />
       <autoscrollToSource />
       <autoscrollFromSource />
@@ -175,7 +227,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Orion" />
+              <option name="myItemId" value="orion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -185,11 +237,19 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Orion" />
+              <option name="myItemId" value="orion" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cablexl" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -202,16 +262,20 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Project" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.proportion" value="0.0" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="editor.preferences.import" />
+    <property name="options.lastSelected" value="preferences.fileTypes" />
     <property name="recentsLimit" value="5" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="FullScreen" value="false" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="FullScreen" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.searchVisible" value="true" />
@@ -345,7 +409,7 @@
     </configuration>
     <configuration default="false" name="Orion" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="Orion" />
-      <option name="ACTIVITY_CLASS" value="com.example.Orion.OrionMainActivity" />
+      <option name="ACTIVITY_CLASS" value="com.cablexl.Orion.OrionMainActivity" />
       <option name="MODE" value="specific_activity" />
       <option name="DEPLOY" value="true" />
       <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
@@ -396,8 +460,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="83" y="22" width="2477" height="1400" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -417,12 +481,12 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24969149" sideWeight="0.6703125" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296875" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19512194" sideWeight="0.6708229" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917705" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917705" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3296875" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -488,78 +552,203 @@
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="Orion" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="orion" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+      </PATH_ELEMENT>
+    </PATH>
+  </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionGL20Renderer.java">
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/Square.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="13" column="23" selection-start="214" selection-end="214" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionGLSurfaceView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="0" selection-start="324" selection-end="324" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/Square.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="23" selection-start="214" selection-end="214" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionMainActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/OrionMainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="36" selection-start="482" selection-end="482" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="41.541668">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="52" selection-start="478" selection-end="635" vertical-scroll-proportion="0.1626506">
+        <state line="2" column="27" selection-start="135" selection-end="135" vertical-scroll-proportion="0.064794816">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionMainActivity.java">
+    <entry file="file://$PROJECT_DIR$/ant.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="36" selection-start="482" selection-end="482" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/Square.java">
+    <entry file="file://$PROJECT_DIR$/project.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="23" selection-start="214" selection-end="214" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionGL20Renderer.java">
+    <entry file="file://$PROJECT_DIR$/proguard-project.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="48" selection-start="108" selection-end="156" vertical-scroll-proportion="0.059904154">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Orion.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/OrionMainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="13" selection-start="134" selection-end="134" vertical-scroll-proportion="0.1764706">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/example/Orion/OrionGLSurfaceView.java">
+    <entry file="jar://$USER_HOME$/Development/android/sdk/platforms/android-17/android.jar!/android/opengl/GLES20.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="0" selection-start="324" selection-end="324" vertical-scroll-proportion="0.16773163">
+        <state line="362" column="29" selection-start="18798" selection-end="18798" vertical-scroll-proportion="0.33199194" />
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Development/android/sdk/platforms/android-17/android.jar!/android/renderscript/Mesh.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="35" selection-start="883" selection-end="883" vertical-scroll-proportion="0.15090543" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/OrionGLSurfaceView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="5" selection-start="435" selection-end="435" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/OrionGL20Renderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="22" selection-start="826" selection-end="826" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/Triangle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="0" selection-start="2234" selection-end="2553" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cablexl/Orion/Square.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="54" selection-start="3642" selection-end="3642" vertical-scroll-proportion="0.78737116">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Android</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>Android 4.2 Platform</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Orion</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 
