@@ -16,11 +16,11 @@ class Square {
 
     private FloatBuffer vertexBuffer;
     private ShortBuffer drawListBuffer;
-    private int mProgram,mPositionHandle,mColorHandle;
+    private int mProgram, mPositionHandle, mColorHandle;
     private final int vertexCount = squareCoords.length / COORDS_PER_VERTEX;
     private final int vertexStride = COORDS_PER_VERTEX * 4; // bytes per vertex
 
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float color[] = {0.63671875f, 0.76953125f, 0.22265625f, 1.0f};
 
 
     private final String vertexShaderCode =
@@ -39,12 +39,12 @@ class Square {
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
-    static float squareCoords[] = { -0.5f,  0.5f, 0.0f,   // top left
+    static float squareCoords[] = {-0.5f, 0.5f, 0.0f,   // top left
             -0.5f, -0.5f, 0.0f,   // bottom left
             0.5f, -0.5f, 0.0f,   // bottom right
-            0.5f,  0.5f, 0.0f }; // top right
+            0.5f, 0.5f, 0.0f}; // top right
 
-    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
+    private short drawOrder[] = {0, 1, 2, 0, 2, 3}; // order to draw vertices
 
     public Square() {
         // initialize vertex byte buffer for shape coordinates
