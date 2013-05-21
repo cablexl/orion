@@ -1,4 +1,4 @@
-package com.cablexl.Orion;
+package com.cablexl.orion;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;

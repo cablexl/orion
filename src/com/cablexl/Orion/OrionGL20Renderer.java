@@ -1,9 +1,9 @@
-package com.cablexl.Orion;
+package com.cablexl.orion;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 import android.util.Log;
+import com.cablexl.orion.scene.Cube;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -17,20 +17,18 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
     private static final String TAG = OrionGL20Renderer.class.getName();
 
     // define our 4x4 matrices.
-    private float[] projectionMatrix = new float[16];
     private float[] modelViewMatrix = new float[16];
+    private float[] perspectiveProjectionMatrix = new float[16];
+
     private float[] modelViewProjectionMatrix = new float[16];
-    private float[] rotationMatrix = new float[16];
 
 
-
-    private Triangle triangle;
-    private Square square;
+    private Cube cube;
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig eglConfig) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        triangle = new Triangle();
+        cube = new Cube();
     }
 
     @Override
@@ -39,7 +37,7 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
         float ratio = (float) width / height;
 
         // Create a projection matrix for our viewport.
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(perspectiveProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
 
     }
 
@@ -47,21 +45,28 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
         // clear the buffer with the clearcolor specified in the onSurfaceCreated method.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glCullFace(GLES20.GL_BACK);
+        GLES20.glFrontFace(GLES20.GL_CCW);
+
+
+        Matrix.setLookAtM(modelViewMatrix, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+
+        //Matrix.multiplyMM(modelViewMatrix, 0, modelViewMatrix, 0, rotationMatrix, 0);
+        //  long time = SystemClock.uptimeMillis() % 4000L;
+      //  float angle = 0.090f * ((int) time);
+      //  Matrix.setRotateM(rotationMatrix, 0, angle, 0, 0.0f, 0);
 
         // Create the viewModel matrix for the desired camera position of this frame.
-        Matrix.setLookAtM(modelViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //Matrix.setLookAtM(modelViewMatrix, 0, 0.0f, 0.0f, -10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+      //  Matrix.multiplyMM(modelViewMatrix,0, rotationMatrix, 0, modelViewMatrix, 0);
 
         // Create the modelViewProjection matrix by multiplying the ViewModel matrix with the Projection Matrix.
-        Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0);
-
-        long time = SystemClock.uptimeMillis() % 4000L;
-        float angle = 0.090f * ((int) time);
-        Matrix.setRotateM(rotationMatrix, 0, angle, 0, 1.0f, 0);
+        Matrix.multiplyMM(modelViewProjectionMatrix, 0, perspectiveProjectionMatrix, 0, modelViewMatrix, 0);
 
         // Combine the rotation matrix with the projection and camera view
-        Matrix.multiplyMM(modelViewProjectionMatrix, 0, rotationMatrix, 0, modelViewProjectionMatrix, 0);
-
-        triangle.draw(modelViewProjectionMatrix);
+       cube.draw(modelViewProjectionMatrix);
 
     }
 
