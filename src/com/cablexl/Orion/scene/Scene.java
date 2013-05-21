@@ -10,7 +10,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Scene {
-    List<SceneObject> sceneObjects = new ArrayList<>();
+    List<SceneObject> sceneObjects = new ArrayList<SceneObject>();
 
     private final void addSceneObject(final SceneObject sceneObject) {
         sceneObjects.add(sceneObject);
