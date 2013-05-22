@@ -43,30 +43,14 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 unused) {
-        // clear the buffer with the clearcolor specified in the onSurfaceCreated method.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glCullFace(GLES20.GL_BACK);
         GLES20.glFrontFace(GLES20.GL_CCW);
 
-
         Matrix.setLookAtM(modelViewMatrix, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-
-
-        //Matrix.multiplyMM(modelViewMatrix, 0, modelViewMatrix, 0, rotationMatrix, 0);
-        //  long time = SystemClock.uptimeMillis() % 4000L;
-      //  float angle = 0.090f * ((int) time);
-      //  Matrix.setRotateM(rotationMatrix, 0, angle, 0, 0.0f, 0);
-
-        // Create the viewModel matrix for the desired camera position of this frame.
-        //Matrix.setLookAtM(modelViewMatrix, 0, 0.0f, 0.0f, -10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-
-      //  Matrix.multiplyMM(modelViewMatrix,0, rotationMatrix, 0, modelViewMatrix, 0);
-
-        // Create the modelViewProjection matrix by multiplying the ViewModel matrix with the Projection Matrix.
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, perspectiveProjectionMatrix, 0, modelViewMatrix, 0);
 
-        // Combine the rotation matrix with the projection and camera view
-       cube.draw(modelViewProjectionMatrix);
+        cube.draw(modelViewProjectionMatrix);
 
     }
 

@@ -48,7 +48,7 @@ public class Cube extends SceneObject {
     };
 
     private final short order[] = {
-            1,0,2
+            0,1,2,3,6,7,4,5,0,1
     };
 
     public Cube() {
