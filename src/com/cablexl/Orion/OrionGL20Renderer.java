@@ -17,10 +17,9 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
     private static final String TAG = OrionGL20Renderer.class.getName();
 
     // define our 4x4 matrices.
-    private float[] modelViewMatrix = new float[16];
-    private float[] perspectiveProjectionMatrix = new float[16];
-
-    private float[] modelViewProjectionMatrix = new float[16];
+    private float[] viewMatrix = new float[16];
+    private float[] projectionMatrix = new float[16];
+    private float[] viewProjectionMatrix = new float[16];
 
 
     private Cube cube;
@@ -37,7 +36,7 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
         float ratio = (float) width / height;
 
         // Create a projection matrix for our viewport.
-        Matrix.frustumM(perspectiveProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
 
     }
 
@@ -47,10 +46,10 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
         GLES20.glCullFace(GLES20.GL_BACK);
         GLES20.glFrontFace(GLES20.GL_CCW);
 
-        Matrix.setLookAtM(modelViewMatrix, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-        Matrix.multiplyMM(modelViewProjectionMatrix, 0, perspectiveProjectionMatrix, 0, modelViewMatrix, 0);
+        Matrix.setLookAtM(viewMatrix, 0, 1.0f, 1.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
-        cube.draw(modelViewProjectionMatrix);
+        cube.draw(viewProjectionMatrix);
 
     }
 

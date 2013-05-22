@@ -18,7 +18,7 @@ public class Cube extends SceneObject {
             "uniform mat4 uModelViewProjectionMatrix;" +
             "attribute vec4 modelVector;" +
             "void main() {" +
-            "  gl_Position = modelVector * uModelViewProjectionMatrix;" +
+            "  gl_Position =  uModelViewProjectionMatrix * modelVector;" +
             "}";
 
     private final String fragmentShaderCode =
@@ -73,7 +73,7 @@ public class Cube extends SceneObject {
     }
 
     @Override
-    public void draw(float[] modelviewProjectionMatrix) {
+    public void draw(float[] viewProjectMatrix) {
         GLES20.glUseProgram(shaderProgram);
 
         // get handle to vertex shader's vPosition member
@@ -92,7 +92,7 @@ public class Cube extends SceneObject {
 
 
         // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(modelViewProjectionMatrixHandle, 1, false, modelviewProjectionMatrix, 0);
+        GLES20.glUniformMatrix4fv(modelViewProjectionMatrixHandle, 1, false, viewProjectMatrix, 0);
         OrionGL20Renderer.checkGlError("glUniformMatrix4fv");
 
         // Draw the square
