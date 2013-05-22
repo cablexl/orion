@@ -17,8 +17,8 @@ public class Scene {
     }
 
     public final void draw() {
-        for(SceneObject sceneObject: sceneObjects) {
-            sceneObject.draw(null);
+        for (SceneObject sceneObject : sceneObjects) {
+            sceneObject.draw(null, null);
         }
     }
 

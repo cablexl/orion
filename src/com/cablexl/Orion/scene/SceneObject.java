@@ -6,5 +6,5 @@ package com.cablexl.orion.scene;
  * Time: 8:20 PM
  */
 public abstract class SceneObject {
-    public abstract void draw(float[] modelViewProjectionMatrix);
+    public abstract void draw(float[] view, float[] projection);
 }

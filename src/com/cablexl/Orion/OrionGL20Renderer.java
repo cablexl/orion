@@ -17,9 +17,9 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
     private static final String TAG = OrionGL20Renderer.class.getName();
 
     // define our 4x4 matrices.
-    private float[] viewMatrix = new float[16];
-    private float[] projectionMatrix = new float[16];
-    private float[] viewProjectionMatrix = new float[16];
+    private float[] view = new float[16];
+    private float[] projection = new float[16];
+    private float[] viewProjection = new float[16];
 
 
     private Cube cube;
@@ -36,7 +36,7 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
         float ratio = (float) width / height;
 
         // Create a projection matrix for our viewport.
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(projection, 0, -ratio, ratio, -1, 1, 3, 7);
 
     }
 
@@ -46,10 +46,9 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
         GLES20.glCullFace(GLES20.GL_BACK);
         GLES20.glFrontFace(GLES20.GL_CCW);
 
-        Matrix.setLookAtM(viewMatrix, 0, 1.0f, 1.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-        Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+        Matrix.setLookAtM(view, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
-        cube.draw(viewProjectionMatrix);
+        cube.draw(view, projection);
 
     }
 
@@ -69,7 +68,7 @@ public class OrionGL20Renderer implements OrionGLSurfaceView.Renderer {
     /**
      * Utility method for debugging OpenGL calls. Provide the name of the call
      * just after making it:
-     *
+     * <p/>
      * <pre>
      * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
      * MyGLRenderer.checkGlError("glGetUniformLocation");</pre>
