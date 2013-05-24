@@ -36,6 +36,16 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceCreated(final GL10 gl10, final EGLConfig eglConfig) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glDepthFunc(GLES20.GL_LEQUAL);
+        GLES20.glClearDepthf(1.0f);
+        GLES20.glDepthMask(true);
+
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        GLES20.glCullFace(GLES20.GL_BACK);
+        GLES20.glFrontFace(GLES20.GL_CCW);
+
         cube = new Cube(this);
     }
 
@@ -46,11 +56,9 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onDrawFrame(final GL10 gl10) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        GLES20.glCullFace(GLES20.GL_BACK);
-        GLES20.glFrontFace(GLES20.GL_CCW);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        Matrix.setLookAtM(view, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(view, 0, 1.0f, 1.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
         // draw stuff.
         cube.begin();

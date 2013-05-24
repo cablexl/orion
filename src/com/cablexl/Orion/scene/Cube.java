@@ -36,15 +36,41 @@ public class Cube {
 
     // Vertex format: x, y, z, u, v, nx, ny, nz
     private final float vertices[] = {
-            -width, -height,  depth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 0 left-bottom-front
-            -width,  height,  depth, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 1 left-top-front
+            // front
+            -width,  height,  depth, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 0 left-top-front
+            -width, -height,  depth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 1 left-bottom-front
              width, -height,  depth, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 2 right-bottom-front
              width,  height,  depth, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 3 right-top-front
 
-            -width, -height, -depth, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 4 left-bottom-back
-            -width,  height, -depth, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 5 left-top-back
-             width, -height, -depth, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 6 right-bottom-back
-             width,  height, -depth, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 7 right-top-back
+            // right
+            width,  height,  depth, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 4 right-top-front
+            width, -height,  depth, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 5 right-bottom-front
+            width, -height, -depth, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 6 right-bottom-back
+            width,  height, -depth, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 7 right-top-back
+
+            // back
+            width,  height, -depth, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 8 right-top-back
+            width, -height, -depth, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 9 right-bottom-back
+            -width, -height, -depth, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 10 left-bottom-back
+            -width,  height, -depth, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 11 left-top-back
+
+            // left
+            -width,  height, -depth, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // 12 left-top-back
+            -width, -height, -depth, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 13 left-bottom-back
+            -width, -height,  depth, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 14 left-bottom-front
+            -width,  height,  depth, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, // 15 left-top-front
+
+            // top
+            width,  height,  depth, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 16 right-top-front
+            width,  height, -depth, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 17 right-top-back
+            -width,  height, -depth, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 18 left-top-back
+            -width,  height,  depth, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 19 left-top-front
+
+            -width, -height,  depth, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, // 20 left-bottom-front
+            -width, -height, -depth, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 21 left-bottom-back
+            width, -height, -depth, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 22 right-bottom-back
+            width, -height,  depth, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, // 23 right-bottom-front
+
     };
 
     private static final int VERTEX_STRIDE = (3 * 4) + (2 * 4) + (3 * 4); // Pos, UV, Norm
@@ -55,7 +81,12 @@ public class Cube {
 
 
     private final short order[] = {
-            1, 0, 2, 1, 2, 3 // front face
+            0, 1, 2, 0, 2, 3,
+            4, 5, 6, 4, 6, 7,
+            8, 9, 10, 8, 10, 11,
+            12, 13, 14, 12, 14, 15,
+            16, 17, 18, 16, 18, 19,
+            20, 21, 22, 20, 22, 23
     };
 
     public Cube(OrionRenderer orionRenderer) {
@@ -114,7 +145,7 @@ public class Cube {
     }
 
     public void draw(float[] view, float[] projection) {
-        long time = SystemClock.uptimeMillis() % 4000L;
+        long time = SystemClock.uptimeMillis() % 32000L;
         float angle = 0.090f * ((int) time);
 
         float[] model = new float[16];
@@ -122,7 +153,7 @@ public class Cube {
         Matrix.setIdentityM(model, 0);
 
 //        Matrix.translateM(model, 0, -0.5f, -0.5f, -0.5f);
-//        Matrix.rotateM(model, 0, angle, 0.0f, 0.0f, 1.0f);
+//        Matrix.rotateM(model, 0, -45.0f, 1.0f, 0.0f, 0.0f);
 //        Matrix.translateM(model, 0, 0.5f, 0.5f, 0.5f);
 
         float[] modelView = new float[16];
