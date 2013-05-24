@@ -29,23 +29,30 @@ public class Cube {
 
     private final int aVertex;
     private final int aTex;
+    private final int aNormal;
     private final int uColor;
     private final int uViewProjection;
     private final int uTexture;
 
+    // Vertex format: x, y, z, u, v, nx, ny, nz
     private final float vertices[] = {
-            -width, -height,  depth, 0.0f, 1.0f, // 0 left-bottom-front
-            -width,  height,  depth, 0.0f, 0.0f, // 1 left-top-front
-             width, -height,  depth, 1.0f, 1.0f, // 2 right-bottom-front
-             width,  height,  depth, 1.0f, 0.0f, // 3 right-top-front
+            -width, -height,  depth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 0 left-bottom-front
+            -width,  height,  depth, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 1 left-top-front
+             width, -height,  depth, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 2 right-bottom-front
+             width,  height,  depth, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 3 right-top-front
 
-            -width, -height, -depth, 0.0f, 1.0f, // 4 left-bottom-back
-            -width,  height, -depth, 0.0f, 0.0f, // 5 left-top-back
-             width, -height, -depth, 1.0f, 1.0f, // 6 right-bottom-back
-             width,  height, -depth, 1.0f, 0.0f, // 7 right-top-back
+            -width, -height, -depth, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 4 left-bottom-back
+            -width,  height, -depth, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 5 left-top-back
+             width, -height, -depth, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 6 right-bottom-back
+             width,  height, -depth, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 7 right-top-back
     };
 
-    private static final int VERTEX_STRIDE = 5 * 4;
+    private static final int VERTEX_STRIDE = (3 * 4) + (2 * 4) + (3 * 4); // Pos, UV, Norm
+
+    private static final int POSITION_INDEX = 0;
+    private static final int TEXTURE_INDEX = 3;
+    private static final int NORMAL_INDEX = 5;
+
 
     private final short order[] = {
             1, 0, 2, 1, 2, 3 // front face
@@ -80,11 +87,12 @@ public class Cube {
         textureHandle = renderer.loadTexture(R.drawable.texture);
 
         // Cache attribute locations
-        aVertex = GLES20.glGetAttribLocation(shaderProgramHandle, "aVertex");
-        aTex = GLES20.glGetAttribLocation(shaderProgramHandle, "aTex");
-        uColor = GLES20.glGetUniformLocation(shaderProgramHandle, "uColor");
+        aVertex         = GLES20.glGetAttribLocation(shaderProgramHandle, "aVertex");
+        aTex            = GLES20.glGetAttribLocation(shaderProgramHandle, "aTex");
+        aNormal         = GLES20.glGetAttribLocation(shaderProgramHandle, "aNormal");
+        uColor          = GLES20.glGetUniformLocation(shaderProgramHandle, "uColor");
         uViewProjection = GLES20.glGetUniformLocation(shaderProgramHandle, "uViewProjection");
-        uTexture = GLES20.glGetUniformLocation(shaderProgramHandle, "uTexture");
+        uTexture        = GLES20.glGetUniformLocation(shaderProgramHandle, "uTexture");
     }
 
     // Set states
@@ -92,6 +100,7 @@ public class Cube {
         GLES20.glUseProgram(shaderProgramHandle);
         GLES20.glEnableVertexAttribArray(aVertex);
         GLES20.glEnableVertexAttribArray(aTex);
+        GLES20.glEnableVertexAttribArray(aNormal);
 
         // Enable textures
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
@@ -122,11 +131,14 @@ public class Cube {
         Matrix.multiplyMM(viewProjection, 0, projection, 0, modelView, 0);
 
         // Set position
-        vertexBuffer.position(0);
+        vertexBuffer.position(POSITION_INDEX);
         GLES20.glVertexAttribPointer(aVertex, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
         // Set texture coords
-        vertexBuffer.position(3);
+        vertexBuffer.position(TEXTURE_INDEX);
         GLES20.glVertexAttribPointer(aTex, 2, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
+        // Set normal coords
+        vertexBuffer.position(NORMAL_INDEX);
+        GLES20.glVertexAttribPointer(aNormal, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
 
         float color[] = {1.0f, 0.0f, 0.0f, 1.0f};
 
@@ -146,6 +158,7 @@ public class Cube {
     public void end() {
         GLES20.glDisableVertexAttribArray(aVertex);
         GLES20.glDisableVertexAttribArray(aTex);
+        GLES20.glDisableVertexAttribArray(aNormal);
 
         GLES20.glDisable(GLES20.GL_TEXTURE_2D);
         GLES20.glDisable(GLES20.GL_BLEND);
