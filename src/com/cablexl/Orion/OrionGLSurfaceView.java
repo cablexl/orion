@@ -13,7 +13,7 @@ public class OrionGLSurfaceView extends GLSurfaceView {
     public OrionGLSurfaceView(Context context) {
         super(context);
         setEGLContextClientVersion(2);
-        setRenderer(new OrionGL20Renderer());
+        setRenderer(new OrionRenderer(getContext()));
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     }
 }
