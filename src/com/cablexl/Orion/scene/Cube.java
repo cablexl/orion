@@ -24,21 +24,28 @@ public class Cube {
     private FloatBuffer vertexBuffer;
     private ShortBuffer orderBuffer;
     private final int shaderProgramHandle;
-    private final int vertexShaderHandle;
-    private final int fragmentShaderHandle;
     private final OrionRenderer renderer;
+    private final int textureHandle;
+
+    private final int aVertex;
+    private final int aTex;
+    private final int uColor;
+    private final int uViewProjection;
+    private final int uTexture;
 
     private final float vertices[] = {
-            -width, -height, depth, // 0 left-bottom-front
-            -width, height, depth, // 1 left-top-front
-            width, -height, depth, // 2 right-bottom-front
-            width, height, depth, // 3 right-top-front
+            -width, -height,  depth, 0.0f, 1.0f, // 0 left-bottom-front
+            -width,  height,  depth, 0.0f, 0.0f, // 1 left-top-front
+             width, -height,  depth, 1.0f, 1.0f, // 2 right-bottom-front
+             width,  height,  depth, 1.0f, 0.0f, // 3 right-top-front
 
-            -width, -height, -depth, // 4 left-bottom-back
-            -width, height, -depth,  // 5 left-top-back
-            width, -height, -depth, // 6 right-bottom-back
-            width, height, -depth, // 7 right-top-back
+            -width, -height, -depth, 0.0f, 1.0f, // 4 left-bottom-back
+            -width,  height, -depth, 0.0f, 0.0f, // 5 left-top-back
+             width, -height, -depth, 1.0f, 1.0f, // 6 right-bottom-back
+             width,  height, -depth, 1.0f, 0.0f, // 7 right-top-back
     };
+
+    private static final int VERTEX_STRIDE = 5 * 4;
 
     private final short order[] = {
             1, 0, 2, 1, 2, 3 // front face
@@ -61,18 +68,43 @@ public class Cube {
         orderBuffer.put(order);
         orderBuffer.position(0);
 
-        vertexShaderHandle = renderer.loadVertexShader(R.raw.cubevertexshader);
-        fragmentShaderHandle = renderer.loadFragmentShader(R.raw.cubefragmentshader);
+        int vertexShaderHandle = renderer.loadVertexShader(R.raw.cubevertexshader);
+        int fragmentShaderHandle = renderer.loadFragmentShader(R.raw.cubefragmentshader);
 
         shaderProgramHandle = GLES20.glCreateProgram();
         GLES20.glAttachShader(shaderProgramHandle, vertexShaderHandle);
         GLES20.glAttachShader(shaderProgramHandle, fragmentShaderHandle);
         GLES20.glLinkProgram(shaderProgramHandle);
+
+        // Load texture
+        textureHandle = renderer.loadTexture(R.drawable.texture);
+
+        // Cache attribute locations
+        aVertex = GLES20.glGetAttribLocation(shaderProgramHandle, "aVertex");
+        aTex = GLES20.glGetAttribLocation(shaderProgramHandle, "aTex");
+        uColor = GLES20.glGetUniformLocation(shaderProgramHandle, "uColor");
+        uViewProjection = GLES20.glGetUniformLocation(shaderProgramHandle, "uViewProjection");
+        uTexture = GLES20.glGetUniformLocation(shaderProgramHandle, "uTexture");
+    }
+
+    // Set states
+    public void begin() {
+        GLES20.glUseProgram(shaderProgramHandle);
+        GLES20.glEnableVertexAttribArray(aVertex);
+        GLES20.glEnableVertexAttribArray(aTex);
+
+        // Enable textures
+        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+        GLES20.glEnable(GLES20.GL_TEXTURE);
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_SRC_COLOR);
+
+        // Activate texture unit 0 and bind the single texture to that unit
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle);
     }
 
     public void draw(float[] view, float[] projection) {
-        GLES20.glUseProgram(shaderProgramHandle);
-
         long time = SystemClock.uptimeMillis() % 4000L;
         float angle = 0.090f * ((int) time);
 
@@ -89,29 +121,33 @@ public class Cube {
         Matrix.multiplyMM(modelView, 0, view, 0, model, 0);
         Matrix.multiplyMM(viewProjection, 0, projection, 0, modelView, 0);
 
-        // get handle to vertex shader's vPosition member
-        int aVertex = GLES20.glGetAttribLocation(shaderProgramHandle, "aVertex");
-        GLES20.glEnableVertexAttribArray(aVertex);
-        GLES20.glVertexAttribPointer(aVertex, 3, GLES20.GL_FLOAT, false, 3 * 4, vertexBuffer);
+        // Set position
+        vertexBuffer.position(0);
+        GLES20.glVertexAttribPointer(aVertex, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
+        // Set texture coords
+        vertexBuffer.position(3);
+        GLES20.glVertexAttribPointer(aTex, 2, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
 
         float color[] = {1.0f, 0.0f, 0.0f, 1.0f};
 
-        // get handle to fragment shader's vColor member
-        int uColor = GLES20.glGetUniformLocation(shaderProgramHandle, "uColor");
+        // Bind texture unit 0 (prepared in the begin method) to 'uTexture' sampler
+        GLES20.glUniform1i(uTexture, 0);
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(uColor, 1, color, 0);
 
-        int viewProjectionHandle = GLES20.glGetUniformLocation(shaderProgramHandle, "uViewProjection");
-
         // bind the viewProjection matrix to the shader program.
-        GLES20.glUniformMatrix4fv(viewProjectionHandle, 1, false, viewProjection, 0);
+        GLES20.glUniformMatrix4fv(uViewProjection, 1, false, viewProjection, 0);
 
         // draw the cube using triangle strips.
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, order.length, GLES20.GL_UNSIGNED_SHORT, orderBuffer);
+    }
 
-        // Disable vertex array
+    public void end() {
         GLES20.glDisableVertexAttribArray(aVertex);
-        // Draw the triangle
+        GLES20.glDisableVertexAttribArray(aTex);
+
+        GLES20.glDisable(GLES20.GL_TEXTURE_2D);
+        GLES20.glDisable(GLES20.GL_BLEND);
     }
 }

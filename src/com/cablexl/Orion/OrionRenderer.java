@@ -1,9 +1,10 @@
 package com.cablexl.orion;
 
 import android.content.Context;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.*;
+import android.util.Log;
 import com.cablexl.orion.scene.Cube;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -11,6 +12,9 @@ import javax.microedition.khronos.opengles.GL10;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
 /**
  * User: frank
@@ -47,8 +51,11 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         GLES20.glFrontFace(GLES20.GL_CCW);
 
         Matrix.setLookAtM(view, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-        cube.draw(view, projection);
+
         // draw stuff.
+        cube.begin();
+        cube.draw(view, projection);
+        cube.end();
     }
 
     public final int loadVertexShader(final int id) {
@@ -63,7 +70,51 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         int shader = GLES20.glCreateShader(type);
         GLES20.glShaderSource(shader, loadFromRaw(id, context));
         GLES20.glCompileShader(shader);
+
+        // TODO This code could probably be cleaned up
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4);
+        byteBuffer.order(ByteOrder.nativeOrder());
+        IntBuffer i = byteBuffer.asIntBuffer();
+
+        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, i);
+        if(i.get(0) == GLES20.GL_FALSE) {
+            Log.e("OrionRenderer", "Shader failed to compile:\n" + GLES20.glGetShaderInfoLog(shader));
+        }
         return shader;
+    }
+
+    public final int loadTexture(final int id) {
+        // TODO This code could probably be cleaned up, maybe just use int[]
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4);
+        byteBuffer.order(ByteOrder.nativeOrder());
+        IntBuffer i = byteBuffer.asIntBuffer();
+
+        // You could create multiple textures at once here, but I'm not
+        GLES20.glGenTextures(1, i);
+        checkGLError();
+
+        // Bind the texture we want to load into
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, i.get(0));
+        checkGLError();
+
+        // TODO more options?  Check the CT Texture class
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+
+        // Load resource
+        final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+        checkGLError();
+
+        return i.get(0);
+    }
+
+    private static void checkGLError() {
+        int err = GLES20.glGetError();
+        if(err != GLES20.GL_NO_ERROR) {
+            Log.e("OrionRenderer", "Operation failed with GL Error [" + err + "] [" + GLU.gluErrorString(err) + "]");
+        }
     }
 
     private static String loadFromRaw(final int id, final Context context) {
