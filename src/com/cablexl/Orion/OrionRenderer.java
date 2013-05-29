@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.util.Log;
+
+import com.cablexl.orion.scene.Cube;
 import com.cablexl.orion.scene.SceneGraph;
+import com.cablexl.orion.util.OrionUtils;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -44,6 +46,9 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         GLES20.glCullFace(GLES20.GL_BACK);
         GLES20.glFrontFace(GLES20.GL_CCW);
 
+        // TODO Probably not the best place to do this but it works for now
+        Cube.initialize(this);
+
         setupSceneGraph();
     }
 
@@ -53,13 +58,29 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceChanged(final GL10 gl10, final int width, final int height) {
         GLES20.glViewport(0, 0, width, height);
-        sceneGraph.getCamera().setProjectionMatrix(width,height,1,100);
+        sceneGraph.getCamera().setProjectionMatrix(width, height, 1, 100);
     }
 
     public void onDrawFrame(final GL10 gl10) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         sceneGraph.getCamera().setViewMatrix();
         sceneGraph.draw();
+    }
+
+    public final int loadShaderProgram(final int vertex, final int frag) {
+        int v = loadVertexShader(vertex);
+        int f = loadFragmentShader(frag);
+
+        int program = GLES20.glCreateProgram();
+        OrionUtils.checkGLError("OrionRenderer", "glCreateProgram");
+        GLES20.glAttachShader(program, v);
+        OrionUtils.checkGLError("OrionRenderer", "glAttachShader [vertex]");
+        GLES20.glAttachShader(program, f);
+        OrionUtils.checkGLError("OrionRenderer", "glAttachShader [prog]");
+        GLES20.glLinkProgram(program);
+        OrionUtils.checkGLError("OrionRenderer", "glLinkProgram");
+
+        return program;
     }
 
     public final int loadVertexShader(final int id) {
@@ -70,10 +91,15 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         return loadShader(GLES20.GL_FRAGMENT_SHADER, id);
     }
 
-    public final int loadShader(final int type, final int id) {
+    /**
+     * Internal helper function for loading shaders
+     */
+    private final int loadShader(final int type, final int id) {
         int shader = GLES20.glCreateShader(type);
         GLES20.glShaderSource(shader, loadFromRaw(id, context));
+        OrionUtils.checkGLError("OrionRenderer", "glShaderSource");
         GLES20.glCompileShader(shader);
+        OrionUtils.checkGLError("OrionRenderer", "glCompileShader");
 
         // TODO This code could probably be cleaned up
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4);
@@ -95,11 +121,11 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
 
         // You could create multiple textures at once here, but I'm not
         GLES20.glGenTextures(1, i);
-        checkGLError();
+        OrionUtils.checkGLError("OrionRenderer", "glGenTextures");
 
         // Bind the texture we want to load into
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, i.get(0));
-        checkGLError();
+        OrionUtils.checkGLError("OrionRenderer", "glBindTexture");
 
         // TODO more options?  Check the CT Texture class
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
@@ -109,16 +135,9 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-        checkGLError();
+        OrionUtils.checkGLError("OrionRenderer", "texImage2D");
 
         return i.get(0);
-    }
-
-    private static void checkGLError() {
-        int err = GLES20.glGetError();
-        if(err != GLES20.GL_NO_ERROR) {
-            Log.e("OrionRenderer", "Operation failed with GL Error [" + err + "] [" + GLU.gluErrorString(err) + "]");
-        }
     }
 
     private static String loadFromRaw(final int id, final Context context) {

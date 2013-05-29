@@ -3,6 +3,7 @@ package com.cablexl.orion.scene;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+
 import com.cablexl.orion.OrionRenderer;
 import com.cablexl.orion.R;
 import com.cablexl.orion.util.OrionUtils;
@@ -19,59 +20,59 @@ import java.nio.ShortBuffer;
  */
 public class Cube {
 
-    private final float width = 0.5f;
-    private final float height = 0.5f;
-    private final float depth = 0.5f;
-    private FloatBuffer vertexBuffer;
-    private ShortBuffer orderBuffer;
-    private final int shaderProgramHandle;
-    private final OrionRenderer renderer;
-    private final SceneGraph sceneGraph;
-    private final int textureHandle;
+    private static final float WIDTH = 0.5f;
+    private static final float HEIGHT = 0.5f;
+    private static final float DEPTH = 0.5f;
 
-    private final int aVertex;
-    private final int aTex;
-    private final int aNormal;
-    private final int uColor;
-    private final int uViewProjection;
-    private final int uTexture;
+    private static FloatBuffer VERTEX_BUFFER;
+    private static ShortBuffer INDEX_BUFFER;
+
+    private static int CUBE_SHADER_HANDLE;
+    private static int TEXTURE_HANDLE;
+
+    private static int aVERTEX;
+    private static int aTEX;
+    private static int aNORMAL;
+    private static int uCOLOR;
+    private static int uVIEW_PROJ;
+    private static int uTEXTURE;
 
     // Vertex format: x, y, z, u, v, nx, ny, nz
-    private final float vertices[] = {
+    private static float VERTICES[] = {
             // front
-            -width,  height,  depth, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 0 left-top-front
-            -width, -height,  depth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 1 left-bottom-front
-             width, -height,  depth, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 2 right-bottom-front
-             width,  height,  depth, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 3 right-top-front
+            -WIDTH,  HEIGHT,  DEPTH, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 0 left-top-front
+            -WIDTH, -HEIGHT,  DEPTH, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 1 left-bottom-front
+            WIDTH, -HEIGHT,  DEPTH, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 2 right-bottom-front
+            WIDTH,  HEIGHT,  DEPTH, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 3 right-top-front
 
             // right
-            width,  height,  depth, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 4 right-top-front
-            width, -height,  depth, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 5 right-bottom-front
-            width, -height, -depth, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 6 right-bottom-back
-            width,  height, -depth, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 7 right-top-back
+            WIDTH,  HEIGHT,  DEPTH, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 4 right-top-front
+            WIDTH, -HEIGHT,  DEPTH, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 5 right-bottom-front
+            WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 6 right-bottom-back
+            WIDTH,  HEIGHT, -DEPTH, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 7 right-top-back
 
             // back
-            width,  height, -depth, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 8 right-top-back
-            width, -height, -depth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 9 right-bottom-back
-            -width, -height, -depth, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 10 left-bottom-back
-            -width,  height, -depth, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 11 left-top-back
+            WIDTH,  HEIGHT, -DEPTH, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 8 right-top-back
+            WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 9 right-bottom-back
+            -WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 10 left-bottom-back
+            -WIDTH,  HEIGHT, -DEPTH, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 11 left-top-back
 
             // left
-            -width,  height, -depth, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 12 left-top-back
-            -width, -height, -depth, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 13 left-bottom-back
-            -width, -height,  depth, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 14 left-bottom-front
-            -width,  height,  depth, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 15 left-top-front
+            -WIDTH,  HEIGHT, -DEPTH, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 12 left-top-back
+            -WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 13 left-bottom-back
+            -WIDTH, -HEIGHT,  DEPTH, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 14 left-bottom-front
+            -WIDTH,  HEIGHT,  DEPTH, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 15 left-top-front
 
             // top
-            width,  height,  depth, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 16 right-top-front
-            width,  height, -depth, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 17 right-top-back
-            -width,  height, -depth, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 18 left-top-back
-            -width,  height,  depth, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 19 left-top-front
+            WIDTH,  HEIGHT,  DEPTH, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 16 right-top-front
+            WIDTH,  HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 17 right-top-back
+            -WIDTH,  HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 18 left-top-back
+            -WIDTH,  HEIGHT,  DEPTH, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 19 left-top-front
 
-            -width, -height,  depth, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 20 left-bottom-front
-            -width, -height, -depth, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 21 left-bottom-back
-            width, -height, -depth, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 22 right-bottom-back
-            width, -height,  depth, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 23 right-bottom-front
+            -WIDTH, -HEIGHT,  DEPTH, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 20 left-bottom-front
+            -WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 21 left-bottom-back
+            WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 22 right-bottom-back
+            WIDTH, -HEIGHT,  DEPTH, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 23 right-bottom-front
 
     };
 
@@ -83,7 +84,7 @@ public class Cube {
 
     private float[] position = { 0.0f,0.0f,0.0f };
 
-    private final short order[] = {
+    private static final short INDICES[] = {
             0, 1, 2, 0, 2, 3,
             4, 5, 6, 4, 6, 7,
             8, 9, 10, 8, 10, 11,
@@ -92,54 +93,52 @@ public class Cube {
             20, 21, 22, 20, 22, 23
     };
 
+    private final SceneGraph sceneGraph;
+
+    public Cube(OrionRenderer orionRenderer, SceneGraph sceneGraph) {
+        // TODO remove
+        // this.renderer = orionRenderer;
+        this.sceneGraph = sceneGraph;
+    }
+
+    public static void initialize(OrionRenderer renderer) {
+        // setup vertex buffer
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(VERTICES.length * 4);
+        byteBuffer.order(ByteOrder.nativeOrder());
+        VERTEX_BUFFER = byteBuffer.asFloatBuffer();
+        VERTEX_BUFFER.put(VERTICES);
+        VERTEX_BUFFER.position(0);
+
+        // setup index buffer
+        byteBuffer = ByteBuffer.allocateDirect(INDICES.length * 2);
+        byteBuffer.order(ByteOrder.nativeOrder());
+        INDEX_BUFFER = byteBuffer.asShortBuffer();
+        INDEX_BUFFER.put(INDICES);
+        INDEX_BUFFER.position(0);
+
+        CUBE_SHADER_HANDLE = renderer.loadShaderProgram(R.raw.cubevertexshader, R.raw.cubefragmentshader);
+
+        // Load texture
+        TEXTURE_HANDLE = renderer.loadTexture(R.drawable.texture);
+
+        aVERTEX     = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aVertex");
+        aTEX        = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aTex");
+        aNORMAL     = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aNormal");
+        uCOLOR      = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uColor");
+        uVIEW_PROJ  = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uViewProjection");
+        uTEXTURE    = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uTexture");
+    }
+
     public void setPosition(float[] position) {
         this.position = position;
     }
 
-    public Cube(OrionRenderer orionRenderer, SceneGraph sceneGraph) {
-        this.renderer = orionRenderer;
-        this.sceneGraph = sceneGraph;
-
-        // setup vertex buffer
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        vertexBuffer = byteBuffer.asFloatBuffer();
-        vertexBuffer.put(vertices);
-        vertexBuffer.position(0);
-
-        // setup vertex draw order buffer
-        byteBuffer = ByteBuffer.allocateDirect(order.length * 2);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        orderBuffer = byteBuffer.asShortBuffer();
-        orderBuffer.put(order);
-        orderBuffer.position(0);
-
-        int vertexShaderHandle = renderer.loadVertexShader(R.raw.cubevertexshader);
-        int fragmentShaderHandle = renderer.loadFragmentShader(R.raw.cubefragmentshader);
-
-        shaderProgramHandle = GLES20.glCreateProgram();
-        GLES20.glAttachShader(shaderProgramHandle, vertexShaderHandle);
-        GLES20.glAttachShader(shaderProgramHandle, fragmentShaderHandle);
-        GLES20.glLinkProgram(shaderProgramHandle);
-
-        // Load texture
-        textureHandle = renderer.loadTexture(R.drawable.texture);
-
-        // Cache attribute locations
-        aVertex         = GLES20.glGetAttribLocation(shaderProgramHandle, "aVertex");
-        aTex            = GLES20.glGetAttribLocation(shaderProgramHandle, "aTex");
-        aNormal         = GLES20.glGetAttribLocation(shaderProgramHandle, "aNormal");
-        uColor          = GLES20.glGetUniformLocation(shaderProgramHandle, "uColor");
-        uViewProjection = GLES20.glGetUniformLocation(shaderProgramHandle, "uViewProjection");
-        uTexture        = GLES20.glGetUniformLocation(shaderProgramHandle, "uTexture");
-    }
-
     // Set states
-    public void begin() {
-        GLES20.glUseProgram(shaderProgramHandle);
-        GLES20.glEnableVertexAttribArray(aVertex);
-        GLES20.glEnableVertexAttribArray(aTex);
-        GLES20.glEnableVertexAttribArray(aNormal);
+    public static void begin() {
+        GLES20.glUseProgram(CUBE_SHADER_HANDLE);
+        GLES20.glEnableVertexAttribArray(aVERTEX);
+        GLES20.glEnableVertexAttribArray(aTEX);
+        GLES20.glEnableVertexAttribArray(aNORMAL);
 
         // Enable textures
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
@@ -149,10 +148,23 @@ public class Cube {
 
         // Activate texture unit 0 and bind the single texture to that unit
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, TEXTURE_HANDLE);
+
+        // Bind texture unit 0 (prepared in the begin method) to 'uTexture' sampler
+        GLES20.glUniform1i(uTEXTURE, 0);
+
+        // Set position
+        VERTEX_BUFFER.position(POSITION_INDEX);
+        GLES20.glVertexAttribPointer(aVERTEX, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
+        // Set texture coords
+        VERTEX_BUFFER.position(TEXTURE_INDEX);
+        GLES20.glVertexAttribPointer(aTEX, 2, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
+        // Set normal coords
+        VERTEX_BUFFER.position(NORMAL_INDEX);
+        GLES20.glVertexAttribPointer(aNORMAL, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
     }
 
-    public void draw() {
+    public void draw(final float[] projView) {
         long time = SystemClock.uptimeMillis() % 64000L;
         float angle = 0.090f * ((int) time);
 
@@ -172,45 +184,28 @@ public class Cube {
         // apply the rotation to the translated model matrix.
         Matrix.multiplyMM(modelRotation, 0, model, 0, rotation, 0);
 
-
-
 //        Matrix.rotateM(model, 0, angle, 1.0f, 1.0f, 0.0f);
 
-        float[] modelView = new float[16];
-        float[] viewProjection = new float[16];
-       Matrix.multiplyMM(modelView, 0, sceneGraph.getCamera().getViewMatrix(), 0, modelRotation, 0);
-//        Matrix.multiplyMM(modelView, 0, sceneGraph.getCamera().getViewMatrix(), 0, model, 0);
-        Matrix.multiplyMM(viewProjection, 0, sceneGraph.getCamera().getProjectionMatrix(), 0, modelView, 0);
+        float[] projViewModel = new float[16];
 
-        // Set position
-        vertexBuffer.position(POSITION_INDEX);
-        GLES20.glVertexAttribPointer(aVertex, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
-        // Set texture coords
-        vertexBuffer.position(TEXTURE_INDEX);
-        GLES20.glVertexAttribPointer(aTex, 2, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
-        // Set normal coords
-        vertexBuffer.position(NORMAL_INDEX);
-        GLES20.glVertexAttribPointer(aNormal, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, vertexBuffer);
+        Matrix.multiplyMM(projViewModel, 0, projView, 0, modelRotation, 0);
 
         float color[] = {1.0f, 0.0f, 0.0f, 1.0f};
 
-        // Bind texture unit 0 (prepared in the begin method) to 'uTexture' sampler
-        GLES20.glUniform1i(uTexture, 0);
-
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(uColor, 1, color, 0);
+        GLES20.glUniform4fv(uCOLOR, 1, color, 0);
 
         // bind the viewProjection matrix to the shader program.
-        GLES20.glUniformMatrix4fv(uViewProjection, 1, false, viewProjection, 0);
+        GLES20.glUniformMatrix4fv(uVIEW_PROJ, 1, false, projViewModel, 0);
 
         // draw the cube using triangle strips.
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, order.length, GLES20.GL_UNSIGNED_SHORT, orderBuffer);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_SHORT, INDEX_BUFFER);
     }
 
-    public void end() {
-        GLES20.glDisableVertexAttribArray(aVertex);
-        GLES20.glDisableVertexAttribArray(aTex);
-        GLES20.glDisableVertexAttribArray(aNormal);
+    public static void end() {
+        GLES20.glDisableVertexAttribArray(aVERTEX);
+        GLES20.glDisableVertexAttribArray(aTEX);
+        GLES20.glDisableVertexAttribArray(aNORMAL);
 
         GLES20.glDisable(GLES20.GL_TEXTURE_2D);
         GLES20.glDisable(GLES20.GL_BLEND);

@@ -1,5 +1,7 @@
 package com.cablexl.orion.scene;
 
+import android.opengl.Matrix;
+
 import com.cablexl.orion.OrionRenderer;
 
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.List;
 public class SceneGraph {
     private final Camera camera = new Camera();
     private final List<Cube> cubes = new ArrayList<Cube>();
+
+    private final float[] projView = new float[16];
 
     public Camera getCamera() {
         return camera;
@@ -35,12 +39,15 @@ public class SceneGraph {
     }
 
     public void draw() {
-        for(Cube cube: cubes) {
-            cube.begin();
-            cube.draw();
-            cube.end();
-        }
+        // Initialize camera matrix
+        Matrix.setIdentityM(projView, 0);
+        Matrix.multiplyMM(projView, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
 
+        Cube.begin();
+        for(Cube cube: cubes) {
+            cube.draw(projView);
+        }
+        Cube.end();
     }
 
 }

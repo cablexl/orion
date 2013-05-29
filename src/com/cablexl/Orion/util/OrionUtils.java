@@ -1,5 +1,9 @@
 package com.cablexl.orion.util;
 
+import android.opengl.GLES20;
+import android.opengl.GLU;
+import android.util.Log;
+
 /**
  * User: frank
  * Date: 5/27/13
@@ -39,5 +43,12 @@ public class OrionUtils {
         rm[rmOffset + 13] = 0.0f;
         rm[rmOffset + 14] = 0.0f;
         rm[rmOffset + 15] = 1.0f;
+    }
+
+    public static void checkGLError(String logger, String location) {
+        int err = GLES20.glGetError();
+        if(err != GLES20.GL_NO_ERROR) {
+            Log.e(logger, "Operation failed with GL Error [" + err + "] at [" + location + "] [" + GLU.gluErrorString(err) + "]");
+        }
     }
 }
