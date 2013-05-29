@@ -23,13 +23,13 @@ public class SceneGraph {
     }
 
     public SceneGraph(OrionRenderer renderer) {
-        Cube cube1 = new Cube(renderer, this);
-        Cube cube2 = new Cube(renderer, this);
         for(int i = 0; i < 10; i++) {
             for(int j = 0; j > -10; j--) {
-                Cube cube = new Cube(renderer, this);
-                cube.setPosition(new float[] { i, 0.0f, j });
-                getCubes().add(cube);
+                if(i % 2 == 0 && j % 2 == 0) {
+                    Cube cube = new Cube(renderer, this);
+                    cube.setPosition(new float[] { i, 0.0f, j });
+                    getCubes().add(cube);
+                }
             }
         }
     }

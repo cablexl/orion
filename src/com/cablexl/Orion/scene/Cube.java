@@ -5,6 +5,7 @@ import android.opengl.Matrix;
 import android.os.SystemClock;
 import com.cablexl.orion.OrionRenderer;
 import com.cablexl.orion.R;
+import com.cablexl.orion.util.OrionUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -25,6 +26,7 @@ public class Cube {
     private ShortBuffer orderBuffer;
     private final int shaderProgramHandle;
     private final OrionRenderer renderer;
+    private final SceneGraph sceneGraph;
     private final int textureHandle;
 
     private final int aVertex;
@@ -49,16 +51,16 @@ public class Cube {
             width,  height, -depth, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 7 right-top-back
 
             // back
-            width,  height, -depth, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 8 right-top-back
-            width, -height, -depth, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 9 right-bottom-back
-            -width, -height, -depth, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 10 left-bottom-back
-            -width,  height, -depth, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 11 left-top-back
+            width,  height, -depth, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 8 right-top-back
+            width, -height, -depth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 9 right-bottom-back
+            -width, -height, -depth, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 10 left-bottom-back
+            -width,  height, -depth, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 11 left-top-back
 
             // left
-            -width,  height, -depth, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // 12 left-top-back
-            -width, -height, -depth, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 13 left-bottom-back
-            -width, -height,  depth, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 14 left-bottom-front
-            -width,  height,  depth, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, // 15 left-top-front
+            -width,  height, -depth, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 12 left-top-back
+            -width, -height, -depth, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 13 left-bottom-back
+            -width, -height,  depth, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 14 left-bottom-front
+            -width,  height,  depth, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 15 left-top-front
 
             // top
             width,  height,  depth, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 16 right-top-front
@@ -66,10 +68,10 @@ public class Cube {
             -width,  height, -depth, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 18 left-top-back
             -width,  height,  depth, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 19 left-top-front
 
-            -width, -height,  depth, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, // 20 left-bottom-front
-            -width, -height, -depth, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 21 left-bottom-back
-            width, -height, -depth, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 22 right-bottom-back
-            width, -height,  depth, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, // 23 right-bottom-front
+            -width, -height,  depth, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 20 left-bottom-front
+            -width, -height, -depth, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 21 left-bottom-back
+            width, -height, -depth, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 22 right-bottom-back
+            width, -height,  depth, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 23 right-bottom-front
 
     };
 
@@ -79,6 +81,7 @@ public class Cube {
     private static final int TEXTURE_INDEX = 3;
     private static final int NORMAL_INDEX = 5;
 
+    private float[] position = { 0.0f,0.0f,0.0f };
 
     private final short order[] = {
             0, 1, 2, 0, 2, 3,
@@ -89,8 +92,13 @@ public class Cube {
             20, 21, 22, 20, 22, 23
     };
 
-    public Cube(OrionRenderer orionRenderer) {
+    public void setPosition(float[] position) {
+        this.position = position;
+    }
+
+    public Cube(OrionRenderer orionRenderer, SceneGraph sceneGraph) {
         this.renderer = orionRenderer;
+        this.sceneGraph = sceneGraph;
 
         // setup vertex buffer
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -144,22 +152,35 @@ public class Cube {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle);
     }
 
-    public void draw(float[] view, float[] projection) {
-        long time = SystemClock.uptimeMillis() % 32000L;
+    public void draw() {
+        long time = SystemClock.uptimeMillis() % 64000L;
         float angle = 0.090f * ((int) time);
 
         float[] model = new float[16];
+        float[] rotation = new float[16];
 
         Matrix.setIdentityM(model, 0);
+        Matrix.setIdentityM(rotation, 0);
 
-//        Matrix.translateM(model, 0, -0.5f, -0.5f, -0.5f);
-//        Matrix.rotateM(model, 0, -45.0f, 1.0f, 0.0f, 0.0f);
-//        Matrix.translateM(model, 0, 0.5f, 0.5f, 0.5f);
+        // create rotation matrix.
+        OrionUtils.setRotateEulerM(rotation, 0, angle, angle, 0.0f);
+        float[] modelRotation = new float[16];
+
+        // translate the model matrix to the right position.
+        Matrix.translateM(model, 0, position[0], position[1], position[2]);
+
+        // apply the rotation to the translated model matrix.
+        Matrix.multiplyMM(modelRotation, 0, model, 0, rotation, 0);
+
+
+
+//        Matrix.rotateM(model, 0, angle, 1.0f, 1.0f, 0.0f);
 
         float[] modelView = new float[16];
         float[] viewProjection = new float[16];
-        Matrix.multiplyMM(modelView, 0, view, 0, model, 0);
-        Matrix.multiplyMM(viewProjection, 0, projection, 0, modelView, 0);
+       Matrix.multiplyMM(modelView, 0, sceneGraph.getCamera().getViewMatrix(), 0, modelRotation, 0);
+//        Matrix.multiplyMM(modelView, 0, sceneGraph.getCamera().getViewMatrix(), 0, model, 0);
+        Matrix.multiplyMM(viewProjection, 0, sceneGraph.getCamera().getProjectionMatrix(), 0, modelView, 0);
 
         // Set position
         vertexBuffer.position(POSITION_INDEX);
