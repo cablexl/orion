@@ -53,16 +53,16 @@ public class Cube {
             WIDTH,  HEIGHT, -DEPTH, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 7 right-top-back
 
             // back
-            WIDTH,  HEIGHT, -DEPTH, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 8 right-top-back
-            WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 9 right-bottom-back
-            -WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 10 left-bottom-back
-            -WIDTH,  HEIGHT, -DEPTH, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 11 left-top-back
+            WIDTH,  HEIGHT, -DEPTH, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 8 right-top-back
+            WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 9 right-bottom-back
+            -WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f, // 10 left-bottom-back
+            -WIDTH,  HEIGHT, -DEPTH, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 11 left-top-back
 
             // left
-            -WIDTH,  HEIGHT, -DEPTH, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 12 left-top-back
-            -WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 13 left-bottom-back
-            -WIDTH, -HEIGHT,  DEPTH, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 14 left-bottom-front
-            -WIDTH,  HEIGHT,  DEPTH, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 15 left-top-front
+            -WIDTH,  HEIGHT, -DEPTH, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // 12 left-top-back
+            -WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 13 left-bottom-back
+            -WIDTH, -HEIGHT,  DEPTH, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 14 left-bottom-front
+            -WIDTH,  HEIGHT,  DEPTH, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, // 15 left-top-front
 
             // top
             WIDTH,  HEIGHT,  DEPTH, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 16 right-top-front
@@ -70,10 +70,11 @@ public class Cube {
             -WIDTH,  HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 18 left-top-back
             -WIDTH,  HEIGHT,  DEPTH, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 19 left-top-front
 
-            -WIDTH, -HEIGHT,  DEPTH, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 20 left-bottom-front
-            -WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 21 left-bottom-back
-            WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 22 right-bottom-back
-            WIDTH, -HEIGHT,  DEPTH, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 23 right-bottom-front
+            // bottom
+            -WIDTH, -HEIGHT,  DEPTH, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, // 20 left-bottom-front
+            -WIDTH, -HEIGHT, -DEPTH, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 21 left-bottom-back
+            WIDTH, -HEIGHT, -DEPTH, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 22 right-bottom-back
+            WIDTH, -HEIGHT,  DEPTH, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, // 23 right-bottom-front
 
     };
 
