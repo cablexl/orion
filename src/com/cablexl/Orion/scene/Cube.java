@@ -200,7 +200,7 @@ public class Cube {
 
         GLES20.glUniformMatrix4fv(uVIEW, 1, false, modelView, 0);
 
-        float lightPosition[] = {0.0f, 0.0f, -5.0f, 1.0f};
+        float lightPosition[] = {5.0f, 1.0f, -7.0f, 1.0f};
 
         float[] lightInView = new float[4];
         Matrix.multiplyMV(lightInView, 0,sceneGraph.getCamera().getViewMatrix(), 0, lightPosition, 0);

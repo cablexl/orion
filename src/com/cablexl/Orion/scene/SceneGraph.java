@@ -16,11 +16,13 @@ public class SceneGraph {
     private final float[] projView = new float[16];
 
     public SceneGraph() {
-        for(int i = 0; i > -10; i--) {
-            if(i % 2 == 0) {
-            Cube cube = new Cube(this);
-            cube.setPosition(new float[]{0.0f,0.0f,i});
-            cubes.add(cube);
+        for (int i = 0; i > -10; i--) {
+            for (int j = 0; j < 10; j++) {
+                if (i % 2 == 0 && j % 2 == 0) {
+                    Cube cube = new Cube(this);
+                    cube.setPosition(new float[]{j, 0.0f, i});
+                    cubes.add(cube);
+                }
             }
         }
     }
