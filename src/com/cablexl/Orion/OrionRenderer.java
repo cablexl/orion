@@ -53,7 +53,7 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
     }
 
     private final void setupSceneGraph() {
-        sceneGraph = new SceneGraph(this);
+        sceneGraph = new SceneGraph();
     }
 
     public void onSurfaceChanged(final GL10 gl10, final int width, final int height) {

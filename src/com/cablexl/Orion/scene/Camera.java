@@ -25,7 +25,7 @@ public class Camera {
     }
 
     public void setViewMatrix() {
-        Matrix.setLookAtM(viewMatrix, 0, 5.0f, 4.0f, 10.0f, 5.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(viewMatrix, 0, 1.0f, 2.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
     }
 
     public Camera() {

@@ -31,10 +31,11 @@ public class Cube {
     private static int TEXTURE_HANDLE;
 
     private static int aVERTEX;
-    private static int aTEX;
+    private static int aTEXTURE;
     private static int aNORMAL;
-    private static int uCOLOR;
+    private static int aLIGHT_POSITION;
     private static int uVIEW_PROJ;
+    private static int uVIEW;
     private static int uTEXTURE;
 
     // Vertex format: x, y, z, u, v, nx, ny, nz
@@ -95,9 +96,7 @@ public class Cube {
 
     private final SceneGraph sceneGraph;
 
-    public Cube(OrionRenderer orionRenderer, SceneGraph sceneGraph) {
-        // TODO remove
-        // this.renderer = orionRenderer;
+    public Cube(SceneGraph sceneGraph) {
         this.sceneGraph = sceneGraph;
     }
 
@@ -121,12 +120,13 @@ public class Cube {
         // Load texture
         TEXTURE_HANDLE = renderer.loadTexture(R.drawable.texture);
 
-        aVERTEX     = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aVertex");
-        aTEX        = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aTex");
-        aNORMAL     = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aNormal");
-        uCOLOR      = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uColor");
-        uVIEW_PROJ  = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uViewProjection");
-        uTEXTURE    = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uTexture");
+        aVERTEX         = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aVertex");
+        aLIGHT_POSITION = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aLightPosition");
+        aTEXTURE        = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aTexture");
+        aNORMAL         = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aNormal");
+        uVIEW           = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uView");
+        uVIEW_PROJ      = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uViewProjection");
+        uTEXTURE        = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uTexture");
     }
 
     public void setPosition(float[] position) {
@@ -137,7 +137,7 @@ public class Cube {
     public static void begin() {
         GLES20.glUseProgram(CUBE_SHADER_HANDLE);
         GLES20.glEnableVertexAttribArray(aVERTEX);
-        GLES20.glEnableVertexAttribArray(aTEX);
+        GLES20.glEnableVertexAttribArray(aTEXTURE);
         GLES20.glEnableVertexAttribArray(aNORMAL);
 
         // Enable textures
@@ -158,45 +158,56 @@ public class Cube {
         GLES20.glVertexAttribPointer(aVERTEX, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
         // Set texture coords
         VERTEX_BUFFER.position(TEXTURE_INDEX);
-        GLES20.glVertexAttribPointer(aTEX, 2, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
+        GLES20.glVertexAttribPointer(aTEXTURE, 2, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
         // Set normal coords
         VERTEX_BUFFER.position(NORMAL_INDEX);
         GLES20.glVertexAttribPointer(aNORMAL, 3, GLES20.GL_FLOAT, false, VERTEX_STRIDE, VERTEX_BUFFER);
+
+
     }
 
     public void draw(final float[] projView) {
-        long time = SystemClock.uptimeMillis() % 64000L;
-        float angle = 0.090f * ((int) time);
 
         float[] model = new float[16];
-        float[] rotation = new float[16];
 
         Matrix.setIdentityM(model, 0);
+
+        // create rotation matrix
+        long time = SystemClock.uptimeMillis() % 64000L;
+        float angle = 0.090f * ((int) time);
+        float[] rotation = new float[16];
         Matrix.setIdentityM(rotation, 0);
+        OrionUtils.setRotateEulerM(rotation, 0, angle, angle, 0.0f);
 
         // create rotation matrix.
-        OrionUtils.setRotateEulerM(rotation, 0, angle, angle, 0.0f);
         float[] modelRotation = new float[16];
 
-        // translate the model matrix to the right position.
+        // apply position translation to model matrix.
         Matrix.translateM(model, 0, position[0], position[1], position[2]);
 
-        // apply the rotation to the translated model matrix.
+        // apply rotation to model matrix
         Matrix.multiplyMM(modelRotation, 0, model, 0, rotation, 0);
 
-//        Matrix.rotateM(model, 0, angle, 1.0f, 1.0f, 0.0f);
-
         float[] projViewModel = new float[16];
-
         Matrix.multiplyMM(projViewModel, 0, projView, 0, modelRotation, 0);
-
-        float color[] = {1.0f, 0.0f, 0.0f, 1.0f};
-
-        // Set color for drawing the triangle
-        GLES20.glUniform4fv(uCOLOR, 1, color, 0);
 
         // bind the viewProjection matrix to the shader program.
         GLES20.glUniformMatrix4fv(uVIEW_PROJ, 1, false, projViewModel, 0);
+
+        // bind the modelView matrix to the shader program.
+        float[] modelView = new float[16];
+        Matrix.multiplyMM(modelView, 0, sceneGraph.getCamera().getViewMatrix(), 0, modelRotation, 0);
+
+        GLES20.glUniformMatrix4fv(uVIEW, 1, false, modelView, 0);
+
+        float lightPosition[] = {0.0f, 0.0f, -5.0f, 1.0f};
+
+        float[] lightInView = new float[4];
+        Matrix.multiplyMV(lightInView, 0,sceneGraph.getCamera().getViewMatrix(), 0, lightPosition, 0);
+
+        // Set the position of the light (static)
+        GLES20.glVertexAttrib4fv(aLIGHT_POSITION, lightInView, 0);
+
 
         // draw the cube using triangle strips.
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_SHORT, INDEX_BUFFER);
@@ -204,7 +215,7 @@ public class Cube {
 
     public static void end() {
         GLES20.glDisableVertexAttribArray(aVERTEX);
-        GLES20.glDisableVertexAttribArray(aTEX);
+        GLES20.glDisableVertexAttribArray(aTEXTURE);
         GLES20.glDisableVertexAttribArray(aNORMAL);
 
         GLES20.glDisable(GLES20.GL_TEXTURE_2D);
