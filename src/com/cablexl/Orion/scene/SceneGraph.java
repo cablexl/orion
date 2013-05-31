@@ -26,7 +26,7 @@ public class SceneGraph {
             }
         }
         Cube cube = new Cube(this);
-        cube.setPosition(new float[]{5.0f, 3.0f, -7.0f});
+        cube.setPosition(new float[]{5.0f, 2.0f, -7.0f});
         cubes.add(cube);
 
     }
@@ -46,7 +46,7 @@ public class SceneGraph {
 
         Cube.begin();
         for (Cube cube : cubes) {
-            cube.draw(projView);
+            cube.draw(projView, camera.getViewMatrix());
         }
         Cube.end();
     }

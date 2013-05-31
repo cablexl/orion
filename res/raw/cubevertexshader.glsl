@@ -1,5 +1,6 @@
-uniform mat4 uViewProjection;
-uniform mat4 uView;
+uniform mat4 uViewProjection;   /* Complete MVP matrix */
+uniform mat4 uView;             /* MV Matrix */
+uniform mat4 uViewInvTrans;     /* Inverse Transpose of MV matrix */
 
 attribute vec4 aVertex;
 attribute vec2 aTexture;
@@ -20,11 +21,10 @@ void main() {
     vec4 vertexInView = uView * aVertex;
 
     /* light => view space */
-    /* vec4 lightInView = uView * aLightPosition; */
     vec4 lightInView = aLightPosition;
 
     /* normal => view space */
-    vec4 normalInView = uView *aNormal;
+    vec4 normalInView = normalize(uViewInvTrans * vNormal);
 
     /* distance of the light to the vertex in view space */
     float lightDistance = length(lightInView - vertexInView);
@@ -33,12 +33,13 @@ void main() {
     vec4 lightVector = normalize(lightInView - vertexInView);
 
     /* dot product between surface normal and light vector. */
-    float diffuse = max(dot(normalInView, lightVector), 0.1);
+    float diffuse = clamp(dot(normalInView, lightVector), 0.0, 1.0);
 
     /* distance based attenuation (pulled off of a website, dunno) */
-    diffuse = diffuse * (1.0 / (1.0 + (0.25 * lightDistance * lightDistance)));
+    diffuse = diffuse * (1.0 / (0.25 * lightDistance * lightDistance));
 
-    vColor = vec4(1.0,1.0,1.0,1.0) * diffuse;
+    /*       Ambient                    Light Color             Diffuse weight */
+    vColor = vec4(0.02, 0.02, 0.02, 1.0) + vec4(1.0,1.0,1.0,1.0) * diffuse;
 
     gl_Position =  uViewProjection * aVertex;
 }

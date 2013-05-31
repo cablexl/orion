@@ -36,6 +36,7 @@ public class Cube {
     private static int aLIGHT_POSITION;
     private static int uVIEW_PROJ;
     private static int uVIEW;
+    private static int uVIEW_INV_TRANS;
     private static int uTEXTURE;
 
     // Vertex format: x, y, z, u, v, nx, ny, nz
@@ -128,6 +129,7 @@ public class Cube {
         uVIEW           = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uView");
         uVIEW_PROJ      = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uViewProjection");
         uTEXTURE        = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uTexture");
+        uVIEW_INV_TRANS = GLES20.glGetUniformLocation(CUBE_SHADER_HANDLE, "uViewInvTrans");
     }
 
     public void setPosition(float[] position) {
@@ -167,10 +169,40 @@ public class Cube {
 
     }
 
-    public void draw(final float[] projView) {
+    public void draw(final float[] projView, final float[] view) {
 
+        // Calculate and bind ModelViewProj
+        float[] modelToWorld = calculateModelToWorld();
+        float[] projViewModel = new float[16];
+        Matrix.multiplyMM(projViewModel, 0, projView, 0, modelToWorld, 0);
+        // bind the viewProjection matrix to the shader program.
+        GLES20.glUniformMatrix4fv(uVIEW_PROJ, 1, false, projViewModel, 0);
+
+        // Calculate and bind ModelView
+        float[] modelView = new float[16];
+        Matrix.multiplyMM(modelView, 0, view, 0, modelToWorld, 0);
+        GLES20.glUniformMatrix4fv(uVIEW, 1, false, modelView, 0);
+
+        // Calculate and bind Inverse Transpose of ModelView
+        float[] scratch = new float[16];
+        float[] invTrans = new float[16];
+
+        Matrix.invertM(scratch, 0, modelView, 0);
+        Matrix.transposeM(invTrans, 0, scratch, 0);
+        GLES20.glUniformMatrix4fv(uVIEW_INV_TRANS, 1, false, invTrans, 0);
+
+        float lightPosition[] = {5.0f, 2.0f, -7.0f, 1.0f};
+        float[] lightInView = new float[4];
+        Matrix.multiplyMV(lightInView, 0, view, 0, lightPosition, 0);
+        // Set the position of the light (static)
+        GLES20.glVertexAttrib4fv(aLIGHT_POSITION, lightInView, 0);
+
+        // draw the cube using triangle strips.
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_SHORT, INDEX_BUFFER);
+    }
+
+    private float[] calculateModelToWorld() {
         float[] model = new float[16];
-
         Matrix.setIdentityM(model, 0);
 
         // create rotation matrix
@@ -189,29 +221,7 @@ public class Cube {
         // apply rotation to model matrix
         Matrix.multiplyMM(modelRotation, 0, model, 0, rotation, 0);
 
-        float[] projViewModel = new float[16];
-        Matrix.multiplyMM(projViewModel, 0, projView, 0, modelRotation, 0);
-
-        // bind the viewProjection matrix to the shader program.
-        GLES20.glUniformMatrix4fv(uVIEW_PROJ, 1, false, projViewModel, 0);
-
-        // bind the modelView matrix to the shader program.
-        float[] modelView = new float[16];
-        Matrix.multiplyMM(modelView, 0, sceneGraph.getCamera().getViewMatrix(), 0, modelRotation, 0);
-
-        GLES20.glUniformMatrix4fv(uVIEW, 1, false, modelView, 0);
-
-        float lightPosition[] = {5.0f, 3.0f, -7.0f, 1.0f};
-
-        float[] lightInView = new float[4];
-        Matrix.multiplyMV(lightInView, 0,sceneGraph.getCamera().getViewMatrix(), 0, lightPosition, 0);
-
-        // Set the position of the light (static)
-        GLES20.glVertexAttrib4fv(aLIGHT_POSITION, lightInView, 0);
-
-
-        // draw the cube using triangle strips.
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_SHORT, INDEX_BUFFER);
+        return modelRotation;
     }
 
     public static void end() {
