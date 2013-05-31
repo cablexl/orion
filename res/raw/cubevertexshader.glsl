@@ -36,9 +36,9 @@ void main() {
     float diffuse = clamp(dot(normalInView, lightVector), 0.0, 1.0);
 
     /* distance based attenuation (pulled off of a website, dunno) */
-    diffuse = diffuse * (1.0 / (0.25 * lightDistance * lightDistance));
+    diffuse = diffuse * (10.0 /(lightDistance * lightDistance));
 
-    /*       Ambient                    Light Color             Diffuse weight */
+    /*       Ambient                       Light Color             Diffuse */
     vColor = vec4(0.02, 0.02, 0.02, 1.0) + vec4(1.0,1.0,1.0,1.0) * diffuse;
 
     gl_Position =  uViewProjection * aVertex;
