@@ -25,6 +25,10 @@ public class SceneGraph {
                 }
             }
         }
+        Cube cube = new Cube(this);
+        cube.setPosition(new float[]{5.0f, 3.0f, -7.0f});
+        cubes.add(cube);
+
     }
 
     public Camera getCamera() {
