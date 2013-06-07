@@ -6,7 +6,9 @@ import android.os.SystemClock;
 
 import com.cablexl.orion.OrionRenderer;
 import com.cablexl.orion.R;
+import com.cablexl.orion.util.Matrix4;
 import com.cablexl.orion.util.OrionUtils;
+import com.cablexl.orion.util.Pool;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -98,8 +100,14 @@ public class Cube {
 
     private final SceneGraph sceneGraph;
 
+    // TODO tweak this size
+    private static final int MATRIX_POOL_COUNT = 10;
+    private final Pool<Matrix4> MATRIX_POOL;
+
+
     public Cube(SceneGraph sceneGraph) {
         this.sceneGraph = sceneGraph;
+        this.MATRIX_POOL = new Pool<Matrix4>(MATRIX_POOL_COUNT, Matrix4.class);
     }
 
     public static void initialize(OrionRenderer renderer) {
@@ -120,7 +128,7 @@ public class Cube {
         CUBE_SHADER_HANDLE = renderer.loadShaderProgram(R.raw.cubevertexshader, R.raw.cubefragmentshader);
 
         // Load texture
-        TEXTURE_HANDLE = renderer.loadTexture(R.drawable.texture);
+        TEXTURE_HANDLE = renderer.loadTexture("textures/texture.png");
 
         aVERTEX         = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aVertex");
         aLIGHT_POSITION = GLES20.glGetAttribLocation(CUBE_SHADER_HANDLE, "aLightPosition");
@@ -171,25 +179,27 @@ public class Cube {
 
     public void draw(final float[] projView, final float[] view) {
 
+        Matrix4 modelToWorld = MATRIX_POOL.take();
+        calculateModelToWorld(modelToWorld);
+        Matrix4 projViewModel = MATRIX_POOL.take();
+
         // Calculate and bind ModelViewProj
-        float[] modelToWorld = calculateModelToWorld();
-        float[] projViewModel = new float[16];
-        Matrix.multiplyMM(projViewModel, 0, projView, 0, modelToWorld, 0);
+        Matrix.multiplyMM(projViewModel.m, 0, projView, 0, modelToWorld.m, 0);
         // bind the viewProjection matrix to the shader program.
-        GLES20.glUniformMatrix4fv(uVIEW_PROJ, 1, false, projViewModel, 0);
+        GLES20.glUniformMatrix4fv(uVIEW_PROJ, 1, false, projViewModel.m, 0);
 
         // Calculate and bind ModelView
-        float[] modelView = new float[16];
-        Matrix.multiplyMM(modelView, 0, view, 0, modelToWorld, 0);
-        GLES20.glUniformMatrix4fv(uVIEW, 1, false, modelView, 0);
+        Matrix4 modelView = MATRIX_POOL.take();
+        Matrix.multiplyMM(modelView.m, 0, view, 0, modelToWorld.m, 0);
+        GLES20.glUniformMatrix4fv(uVIEW, 1, false, modelView.m, 0);
 
         // Calculate and bind Inverse Transpose of ModelView
-        float[] scratch = new float[16];
-        float[] invTrans = new float[16];
+        Matrix4 scratch = MATRIX_POOL.take();
+        Matrix4 invTrans = MATRIX_POOL.take();
 
-        Matrix.invertM(scratch, 0, modelView, 0);
-        Matrix.transposeM(invTrans, 0, scratch, 0);
-        GLES20.glUniformMatrix4fv(uVIEW_INV_TRANS, 1, false, invTrans, 0);
+        Matrix.invertM(scratch.m, 0, modelView.m, 0);
+        Matrix.transposeM(invTrans.m, 0, scratch.m, 0);
+        GLES20.glUniformMatrix4fv(uVIEW_INV_TRANS, 1, false, invTrans.m, 0);
 
         float lightPosition[] = {5.0f, 2.0f, -7.0f, 1.0f};
         float[] lightInView = new float[4];
@@ -199,29 +209,33 @@ public class Cube {
 
         // draw the cube using triangle strips.
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_SHORT, INDEX_BUFFER);
+
+        MATRIX_POOL.release(modelToWorld);
+        MATRIX_POOL.release(projViewModel);
+        MATRIX_POOL.release(modelView);
+        MATRIX_POOL.release(scratch);
+        MATRIX_POOL.release(invTrans);
     }
 
-    private float[] calculateModelToWorld() {
-        float[] model = new float[16];
-        Matrix.setIdentityM(model, 0);
+    private void calculateModelToWorld(Matrix4 out) {
+        Matrix4 model = MATRIX_POOL.take();
+        Matrix.setIdentityM(model.m, 0);
+        Matrix.translateM(model.m, 0, position[0], position[1], position[2]);
 
         // create rotation matrix
         long time = SystemClock.uptimeMillis() % 64000L;
         float angle = 0.090f * ((int) time);
-        float[] rotation = new float[16];
-        Matrix.setIdentityM(rotation, 0);
-        OrionUtils.setRotateEulerM(rotation, 0, angle, angle, 0.0f);
 
-        // create rotation matrix.
-        float[] modelRotation = new float[16];
-
-        // apply position translation to model matrix.
-        Matrix.translateM(model, 0, position[0], position[1], position[2]);
+        // Allows you to 'name' a pre-allocated temporary object
+        Matrix4 rotation = MATRIX_POOL.take();
+        Matrix.setIdentityM(rotation.m, 0);
+        OrionUtils.setRotateEulerM(rotation.m, 0, angle, angle, 0.0f);
 
         // apply rotation to model matrix
-        Matrix.multiplyMM(modelRotation, 0, model, 0, rotation, 0);
+        Matrix.multiplyMM(out.m, 0, model.m, 0, rotation.m, 0);
 
-        return modelRotation;
+        MATRIX_POOL.release(model);
+        MATRIX_POOL.release(rotation);
     }
 
     public static void end() {

@@ -1,6 +1,7 @@
 package com.cablexl.orion;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
@@ -113,7 +114,7 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         return shader;
     }
 
-    public final int loadTexture(final int id) {
+    public final int loadTexture(final String name) {
         // TODO This code could probably be cleaned up, maybe just use int[]
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -131,8 +132,16 @@ public class OrionRenderer implements GLSurfaceView.Renderer {
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
 
+        AssetManager am = context.getAssets();
+
         // Load resource
-        final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+        final Bitmap bitmap;
+        try {
+            bitmap = BitmapFactory.decodeStream(am.open(name));
+        } catch (IOException e) {
+            Log.e("OrionRenderer", "Failed to open texture [" + name +"]");
+            return 0;
+        }
 
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
         OrionUtils.checkGLError("OrionRenderer", "texImage2D");
